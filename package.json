@@ -1,0 +1,24 @@
+{
+  "name": "trading-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fahimc/trading-bot.git"
+  },
+  "author": "Fahim Chowdhury",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fahimc/trading-bot/issues"
+  },
+  "homepage": "https://github.com/fahimc/trading-bot#readme",
+  "dependencies": {
+    "diskdb": "^0.1.17",
+    "ftse": "^1.0.6",
+    "mathjs": "^3.8.0"
+  }
+}
