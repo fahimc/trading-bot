@@ -19,6 +19,8 @@
   "dependencies": {
     "diskdb": "^0.1.17",
     "ftse": "^1.0.6",
-    "mathjs": "^3.8.0"
+    "mathjs": "^3.8.0",
+    "scrap": "^0.1.0",
+    "sentiment": "^2.1.0"
   }
 }

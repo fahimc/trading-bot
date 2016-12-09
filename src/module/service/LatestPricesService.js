@@ -6,7 +6,7 @@ let math = require('mathjs');
 class LatestPricesService {
     getLatest() {
         this.MAX_NUMBER_OF_ITEMS = 200;
-        this.TRIGGER_FOR_CHANGE = 0.02;
+        this.TRIGGER_FOR_CHANGE = 0.05;
         this.keyCollection = [];
         this.date = new Date().toISOString();
         ftse('100', -1, null, this.onData.bind(this));
@@ -27,21 +27,32 @@ class LatestPricesService {
         db[key].save(item);
     }
     checkAllStocks() {
+    	let collection = [];
         for (var a = 0; a < this.keyCollection.length; a++) {
-            this.analyse(a);
+            let item = this.analyse(a);
+            if(item)collection.push(item);
         }
+        if(collection.length)emitter.emit('GET_TWEETS', collection);
     }
     analyse(index) {
         let collection = db[this.keyCollection[index]].find();
         collection.sort(this.sortByDate);
         let latestItems = collection.slice(0, this.MAX_NUMBER_OF_ITEMS);
-        let startPrice = latestItems[0].price.replace(',','');
-        let endPrice = latestItems[latestItems.length - 1].price.replace(',','');
+        let startPrice = latestItems[latestItems.length - 1].price.replace(',','');
+        let endPrice = latestItems[0].price.replace(',','');
         let change = Number(endPrice) - Number(startPrice);
         let decimalPercentage = math.abs(change) / startPrice;
         let percentage = math.round(decimalPercentage, 2);
-        if (percentage >= this.TRIGGER_FOR_CHANGE) {
-            console.log('BUY', change, latestItems[0].name, 'was £'+ startPrice, 'and now £' + endPrice, 'that is a ' ,percentage * 100 + '% decrease');
+        if (change < 0 && percentage >= this.TRIGGER_FOR_CHANGE) {
+           // console.log('BUY', change, latestItems[latestItems.length - 1].name, 'was £'+ startPrice, 'and now £' + endPrice, 'that is a ' ,math.round(percentage * 100) + '% decrease');
+        	return {
+        		name: latestItems[latestItems.length - 1].name,
+        		startPrice:startPrice,
+        		endPrice:endPrice,
+        		price:latestItems[0].price,
+        		percentage: percentage,
+        		change:change
+        	};
         }
     }
     sortByDate(a, b) {
